@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>นักสืบวรรณคดีไขความลับ</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chonburi&family=Sarabun:wght@400;500;700&display=swap">
+<style>
+/* Layout: one centered stage sized for a classroom projector; a gold-leaf manuscript border on lacquer-blue ground. */
+:root {
+  --bg: #e9ecf3;
+  --surface: #ffffff;
+  --surface-2: #f2f4f9;
+  --ink: #1b2340;
+  --muted: #55607f;
+  --line: #c9d0e2;
+  --gold: #8f6410;
+  --gold-fill: #d9a528;
+  --accent: #b2352b;
+  --ok: #1d7552;
+  --ok-bg: #dff3ea;
+  --bad-bg: #fbe6e2;
+  --display: "Chonburi", "Noto Serif Thai", "Tahoma", serif;
+  --body: "Sarabun", "Noto Sans Thai", "Tahoma", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101830; --surface: #1a2547; --surface-2: #222f58; --ink: #f3ecdc; --muted: #aab3d0;
+    --line: #34437a; --gold: #e6bb52; --gold-fill: #e6bb52; --accent: #f27a68; --ok: #62d3a3;
+    --ok-bg: #173d3a; --bad-bg: #4a2a3a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101830; --surface: #1a2547; --surface-2: #222f58; --ink: #f3ecdc; --muted: #aab3d0;
+  --line: #34437a; --gold: #e6bb52; --gold-fill: #e6bb52; --accent: #f27a68; --ok: #62d3a3;
+  --ok-bg: #173d3a; --bad-bg: #4a2a3a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 18px; line-height: 1.55;
+  padding-block: 20px; padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px)); min-height: 100vh;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--gold-fill); outline-offset: 3px; }
+.stage { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+.strip { height: 14px; color: var(--gold-fill); opacity: .9; }
+.strip svg { width: 100%; height: 100%; display: block; }
+h1, h2 { font-family: var(--display); font-weight: 400; text-wrap: balance; margin: 0; line-height: 1.25; }
+.btn {
+  background: var(--accent); color: #fff; border: 0; border-radius: 6px; padding: 14px 32px;
+  font-weight: 700; font-size: 1.15rem; transition: transform .15s ease, filter .15s ease;
+}
+:root[data-theme="dark"] .btn { color: #1a1020; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn { color: #1a1020; } }
+.btn:hover { filter: brightness(1.07); transform: translateY(-1px); }
+.btn.ghost { background: transparent; color: var(--ink); border: 2px solid var(--line); }
+
+/* Home */
+.home { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 260px); gap: 28px; align-items: center; padding: 28px 8px; }
+.eyebrow { font-size: .85rem; letter-spacing: .08em; color: var(--gold); font-weight: 700; }
+.home h1 { font-size: clamp(2rem, 6vw, 3.4rem); margin: 8px 0 14px; }
+.home p { color: var(--muted); margin: 0 0 22px; max-width: 34ch; }
+.meta { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 22px; font-size: .95rem; color: var(--muted); }
+.meta b { color: var(--ink); }
+.art { width: 100%; max-width: 260px; justify-self: center; }
+.art .paper { fill: var(--surface); stroke: var(--line); stroke-width: 2; }
+.art .roll { fill: var(--surface-2); stroke: var(--line); stroke-width: 2; }
+.art .ln { stroke: var(--line); stroke-width: 3; stroke-linecap: round; }
+.art .lens { fill: none; stroke: var(--gold-fill); stroke-width: 9; }
+.art .glass { fill: var(--gold-fill); opacity: .14; }
+.art .handle { stroke: var(--accent); stroke-width: 12; stroke-linecap: round; }
+.art .seal { fill: var(--accent); }
+
+/* Quiz */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.seals { display: flex; gap: 6px; flex-wrap: wrap; }
+.seal { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line); background: transparent; }
+.seal.now { border-color: var(--gold-fill); background: color-mix(in srgb, var(--gold-fill) 30%, transparent); }
+.seal.ok { background: var(--ok); border-color: var(--ok); }
+.seal.miss { background: var(--surface-2); border-color: var(--muted); }
+.score { text-align: right; line-height: 1.1; }
+.score small { display: block; font-size: .8rem; color: var(--muted); letter-spacing: .05em; }
+.score b { font-family: var(--display); font-weight: 400; font-size: 1.8rem; color: var(--gold); font-variant-numeric: tabular-nums; }
+.card { background: color-mix(in srgb, var(--surface) 90%, transparent); backdrop-filter: blur(6px); border: 1px solid var(--line); border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+.qhead { display: flex; gap: 18px; align-items: flex-start; }
+.qhead > div:first-child { min-width: 0; flex: 1; }
+.qno { color: var(--gold); font-weight: 700; font-size: .9rem; letter-spacing: .06em; }
+.q { font-family: var(--display); font-size: clamp(1.3rem, 3.6vw, 1.85rem); line-height: 1.4; margin-top: 4px; }
+.timer { position: relative; width: 72px; height: 72px; flex: none; }
+.timer svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.timer .track { fill: none; stroke: var(--line); stroke-width: 6; }
+.timer .bar { fill: none; stroke: var(--gold-fill); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 175.9; stroke-dashoffset: 0; }
+.timer.low .bar { stroke: var(--accent); }
+.timer span { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--display); font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+.opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.opt {
+  display: flex; gap: 12px; align-items: center; text-align: left; background: var(--surface-2);
+  border: 2px solid var(--line); border-radius: 8px; padding: 14px 16px; min-width: 0;
+  transition: border-color .15s ease, background .15s ease, transform .15s ease;
+}
+.opt:hover:not(:disabled) { border-color: var(--gold-fill); transform: translateY(-1px); }
+.opt:disabled { cursor: default; }
+.opt .k { flex: none; width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; border: 2px solid var(--gold-fill); color: var(--gold); font-weight: 700; font-size: .95rem; }
+.opt .t { min-width: 0; overflow-wrap: anywhere; }
+.opt.right { background: var(--ok-bg); border-color: var(--ok); }
+.opt.right .k { background: var(--ok); border-color: var(--ok); color: #fff; }
+.opt.wrong { background: var(--bad-bg); border-color: var(--accent); }
+.opt.dim { opacity: .55; }
+.fb { border-radius: 8px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; background: var(--surface-2); border: 1px solid var(--line); animation: rise .35s ease; }
+.fb.good { background: var(--ok-bg); border-color: var(--ok); }
+.fb.try { background: var(--bad-bg); border-color: var(--accent); }
+.fb h2 { font-size: 1.25rem; }
+.fb p { margin: 0; }
+.pts { font-weight: 700; color: var(--ok); }
+.next { display: flex; justify-content: flex-end; align-items: center; gap: 14px; flex-wrap: wrap; }
+.hint { color: var(--muted); font-size: .85rem; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.screen { animation: rise .4s ease; }
+
+/* End */
+.end { text-align: center; align-items: center; padding: 36px 24px; }
+.big { font-family: var(--display); font-size: clamp(3rem, 12vw, 5.5rem); color: var(--gold); line-height: 1; font-variant-numeric: tabular-nums; }
+.big small { font-size: .35em; color: var(--muted); }
+.review { text-align: left; width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.review h3 { margin: 0; font-size: 1rem; color: var(--muted); font-weight: 700; letter-spacing: .04em; }
+.review div { background: var(--surface-2); border-radius: 6px; padding: 10px 14px; border: 1px solid var(--line); }
+.review b { color: var(--gold); }
+
+/* 3D layer: WebGL scene sits behind the page; cards get perspective motion */
+#gl { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; transition: opacity .5s ease; }
+.gl .art { visibility: hidden; }
+.stage { position: relative; }
+.card.flip { animation: flipin .6s cubic-bezier(.2, .8, .2, 1); transform-origin: 50% 0; }
+@keyframes flipin {
+  from { opacity: 0; transform: perspective(1200px) rotateX(-16deg) translateY(20px); }
+  to { opacity: 1; transform: none; }
+}
+.opts { perspective: 900px; }
+.opt:hover:not(:disabled) { transform: translateY(-2px) translateZ(14px) rotateX(2deg); box-shadow: 0 10px 22px -12px var(--gold); }
+@media (max-width: 620px) {
+  body[data-mode="quiz"] #gl, body[data-mode="end"] #gl { opacity: .45; }
+}
+@media (max-width: 620px) {
+  .home { grid-template-columns: minmax(0, 1fr); }
+  .art { max-width: 180px; order: -1; }
+  .opts { grid-template-columns: minmax(0, 1fr); }
+  .card { padding: 18px; }
+  .timer { width: 60px; height: 60px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="stage">
+  <div class="strip" aria-hidden="true">
+    <svg viewBox="0 0 480 14" preserveAspectRatio="none"><defs><pattern id="pt" width="28" height="14" patternUnits="userSpaceOnUse"><path d="M14 1 L21 7 L14 13 L7 7 Z" fill="currentColor"/><circle cx="0" cy="7" r="2" fill="currentColor"/><circle cx="28" cy="7" r="2" fill="currentColor"/></pattern></defs><rect width="480" height="14" fill="url(#pt)"/></svg>
+  </div>
+
+  <section id="home" class="screen">
+    <div class="home">
+      <div>
+        <div class="eyebrow">เสภาขุนช้างขุนแผน · ตอนขุนช้างถวายฎีกา</div>
+        <h1>นักสืบวรรณคดีไขความลับ</h1>
+        <p>ตามรอยเบาะแสจากตอนขุนช้างถวายฎีกา ตอบคำถามให้ครบ 10 ข้อ ผิดพลาดได้ เพราะทุกข้อมีเฉลยให้เรียนรู้ต่อ</p>
+        <button class="btn" id="start">เริ่มเกม</button>
+        <div class="meta"><span><b>10</b> ข้อ</span><span><b>20</b> วินาทีต่อข้อ</span><span>ข้อละ <b>10</b> คะแนน</span></div>
+      </div>
+      <svg class="art" viewBox="0 0 260 260" aria-hidden="true">
+        <rect class="roll" x="52" y="40" width="130" height="18" rx="9"/>
+        <rect class="paper" x="62" y="54" width="110" height="150"/>
+        <rect class="roll" x="52" y="196" width="130" height="18" rx="9"/>
+        <path class="ln" d="M82 82h70M82 102h70M82 122h54M82 142h66"/>
+        <circle class="seal" cx="146" cy="176" r="12"/>
+        <circle class="glass" cx="168" cy="132" r="54"/>
+        <circle class="lens" cx="168" cy="132" r="54"/>
+        <path class="handle" d="M206 172 L240 214"/>
+      </svg>
+    </div>
+  </section>
+
+  <section id="quiz" class="screen" hidden>
+    <div class="top">
+      <div class="seals" id="seals" aria-label="ความคืบหน้า"></div>
+      <div class="score"><small>คะแนน</small><b id="score">0</b></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="qhead">
+        <div><div class="qno" id="qno"></div><div class="q" id="q"></div></div>
+        <div class="timer" id="timer" role="timer" aria-label="เวลาที่เหลือ"><svg viewBox="0 0 64 64"><circle class="track" cx="32" cy="32" r="28"/><circle class="bar" id="bar" cx="32" cy="32" r="28"/></svg><span id="sec">20</span></div>
+      </div>
+      <div class="opts" id="opts"></div>
+      <div id="result" aria-live="polite"></div>
+      <div class="next" id="nextrow" hidden><span class="hint">กด Enter เพื่อไปต่อ</span><button class="btn" id="next">ข้อต่อไป</button></div>
+    </div>
+  </section>
+
+  <section id="end" class="screen" hidden>
+    <div class="card end">
+      <div class="eyebrow">สรุปผลการสืบสวน</div>
+      <div class="big"><span id="final">0</span><small> / 100</small></div>
+      <h2 id="endtitle"></h2>
+      <p id="endmsg" style="margin:0;color:var(--muted);max-width:46ch"></p>
+      <div class="review" id="review"></div>
+      <button class="btn" id="again">เล่นอีกครั้ง</button>
+    </div>
+  </section>
+
+  <div class="strip" aria-hidden="true">
+    <svg viewBox="0 0 480 14" preserveAspectRatio="none"><rect width="480" height="14" fill="url(#pt)"/></svg>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* 3D scene: a ฎีกา scroll, a detective's magnifier orbiting it, Thai chedi silhouettes and drifting gold dust.
+   Each correct answer reveals one line of text on the scroll. */
+var GL = (function () {
+  var noop = function () {};
+  var dead = { mode: noop, question: noop, react: noop, finale: noop, reset: noop };
+  var canvas = document.getElementById("gl"), R;
+  try {
+    if (!window.THREE) throw new Error("three missing");
+    R = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+  } catch (e) { canvas.hidden = true; return dead; }
+  document.documentElement.classList.add("gl");
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 1;
+  R.setClearColor(0x000000, 0);
+
+  var scene = new THREE.Scene();
+  var cam = new THREE.PerspectiveCamera(40, 1, 0.1, 60);
+  cam.position.set(0, 0.6, 9);
+  scene.fog = new THREE.Fog(0xe9ecf3, 14, 34);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x6a7aa8, 0.95));
+  var sun = new THREE.DirectionalLight(0xffe7b0, 1.1); sun.position.set(3, 5, 6); scene.add(sun);
+  var rimL = new THREE.PointLight(0xffc860, 0.9, 22); rimL.position.set(-4, 2, 3); scene.add(rimL);
+
+  var mGold = new THREE.MeshStandardMaterial({ color: 0xd9a528, metalness: 0.45, roughness: 0.38, emissive: 0xd9a528, emissiveIntensity: 0.08 });
+  var mPaper = new THREE.MeshStandardMaterial({ color: 0xf3ead2, roughness: 0.9 });
+  var mInk = new THREE.MeshStandardMaterial({ color: 0x3b3f66, roughness: 0.8 });
+  var mWood = new THREE.MeshStandardMaterial({ color: 0x6b2a20, roughness: 0.6 });
+  var mSeal = new THREE.MeshStandardMaterial({ color: 0xb2352b, roughness: 0.5 });
+  var mGlass = new THREE.MeshStandardMaterial({ color: 0xbfe3ff, roughness: 0.1, transparent: true, opacity: 0.22, depthWrite: false });
+  var mChedi = new THREE.MeshStandardMaterial({ color: 0xc9d0e2, roughness: 0.85 });
+
+  var rig = new THREE.Group(); scene.add(rig);
+  var scroll = new THREE.Group(); rig.add(scroll);
+  scroll.add(new THREE.Mesh(new THREE.BoxGeometry(1.7, 2.4, 0.05), mPaper));
+  [1, -1].forEach(function (s) {
+    var rod = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 2.0, 20), mWood);
+    rod.rotation.z = Math.PI / 2; rod.position.y = s * 1.25; scroll.add(rod);
+    [1, -1].forEach(function (e) {
+      var cap = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 12), mGold);
+      cap.position.set(e * 1.02, s * 1.25, 0); scroll.add(cap);
+    });
+  });
+  var lines = [], lineP = [];
+  for (var i = 0; i < 10; i++) {
+    var g = new THREE.BoxGeometry(1, 0.06, 0.02); g.translate(0.5, 0, 0);
+    var ln = new THREE.Mesh(g, mInk);
+    ln.position.set(-0.75, 0.95 - i * 0.19, 0.035);
+    ln.userData.w = i % 3 === 2 ? 1.0 : 1.4;
+    ln.scale.x = 0.001; scroll.add(ln); lines.push(ln); lineP.push(0);
+  }
+  var seal = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.04, 24), mSeal);
+  seal.rotation.x = Math.PI / 2; seal.position.set(0.55, -0.97, 0.04); scroll.add(seal);
+  scroll.rotation.x = -0.08;
+
+  var mag = new THREE.Group(); rig.add(mag);
+  mag.add(new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.07, 16, 48), mGold));
+  var lens = new THREE.Mesh(new THREE.CylinderGeometry(0.52, 0.52, 0.02, 40), mGlass);
+  lens.rotation.x = Math.PI / 2; mag.add(lens);
+  var handle = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.09, 0.9, 16), mSeal);
+  handle.position.set(0.71, -0.71, 0); handle.rotation.z = -3 * Math.PI / 4; mag.add(handle);
+  mag.scale.setScalar(1.1);
+
+  var chedis = new THREE.Group(); scene.add(chedis);
+  var prof = [[1.0, 0], [1.0, 0.2], [0.8, 0.3], [0.85, 0.55], [0.65, 0.7], [0.7, 0.95], [0.5, 1.1], [0.55, 1.4], [0.35, 1.6], [0.38, 2.0], [0.2, 2.6], [0.12, 3.3], [0.03, 4.0]]
+    .map(function (p) { return new THREE.Vector2(p[0], p[1]); });
+  var chediGeo = new THREE.LatheGeometry(prof, 28);
+  [[-6.5, -3.4, -8, 1.3], [7.2, -3.4, -12, 1.8], [-1.5, -3.6, -17, 2.3], [11, -3.6, -19, 2.0]].forEach(function (c) {
+    var grp = new THREE.Group();
+    grp.add(new THREE.Mesh(chediGeo, mChedi));
+    var tip = new THREE.Mesh(new THREE.SphereGeometry(0.09, 12, 10), mGold); tip.position.y = 4.05; grp.add(tip);
+    [1.1, 1.9, 2.8].forEach(function (y, k) {
+      var r = new THREE.Mesh(new THREE.TorusGeometry([0.5, 0.4, 0.22][k], 0.03, 8, 28), mGold);
+      r.rotation.x = Math.PI / 2; r.position.y = y; grp.add(r);
+    });
+    grp.position.set(c[0], c[1], c[2]); grp.scale.setScalar(c[3]); chedis.add(grp);
+  });
+
+  var N = 170, pos = new Float32Array(N * 3), vel = new Float32Array(N);
+  for (var k = 0; k < N; k++) {
+    pos[k * 3] = (Math.random() - 0.5) * 20; pos[k * 3 + 1] = (Math.random() - 0.5) * 10;
+    pos[k * 3 + 2] = -8 + Math.random() * 12; vel[k] = 0.1 + Math.random() * 0.25;
+  }
+  var pg = new THREE.BufferGeometry(); pg.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  var pm = new THREE.PointsMaterial({ size: 0.08, color: 0xd9a528, transparent: true, opacity: 0.85, depthWrite: false });
+  scene.add(new THREE.Points(pg, pm));
+
+  function applyTheme() {
+    var cs = getComputedStyle(document.documentElement);
+    function v(n) { return cs.getPropertyValue(n).trim(); }
+    if (v("--line")) mChedi.color.set(v("--line"));
+    if (v("--gold-fill")) { mGold.color.set(v("--gold-fill")); mGold.emissive.set(v("--gold-fill")); pm.color.set(v("--gold-fill")); }
+    if (v("--accent")) mSeal.color.set(v("--accent"));
+    if (v("--bg")) scene.fog.color.set(v("--bg"));
+  }
+
+  var mode = "home", tgt = { x: 2.8, y: 0, s: 1 }, cur = { x: 2.8, y: 0, s: 0.01 };
+  var wh = 0, ww = 0, vw = 1, vh = 1;
+  function size() {
+    vw = innerWidth; vh = innerHeight;
+    R.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); R.setSize(vw, vh, false);
+    cam.aspect = vw / vh; cam.updateProjectionMatrix();
+    wh = 2 * 9 * Math.tan(20 * Math.PI / 180); ww = wh * cam.aspect;
+    place();
+  }
+  function place() {
+    if (!ww) return;
+    var unit = ww / vw;
+    if (mode === "home") {
+      var art = document.querySelector(".art"), a = art && art.getBoundingClientRect();
+      if (a && a.width > 0) {
+        tgt.x = ((a.left + a.width / 2) / vw - 0.5) * ww; tgt.y = (0.5 - (a.top + a.height / 2) / vh) * wh;
+        tgt.s = a.width * unit / 2.7;
+      }
+    } else if (mode === "quiz") { tgt.x = ww / 2 - 1.0; tgt.y = wh / 2 - 1.2; tgt.s = 0.5; }
+    else { tgt.x = 0; tgt.y = wh / 2 - 1.5; tgt.s = 0.75; }
+  }
+
+  var correct = 0, magAT = 0.5, magA = 0.5, camAT = 0, camA = 0;
+  var glow = 0, boost = 0, spinV = 0, spin = 0, wob = 0, px = 0, py = 0, t = 0;
+  var clock = new THREE.Clock();
+  function frame() {
+    requestAnimationFrame(frame);
+    var dt = Math.min(clock.getDelta(), 0.05); t += dt;
+    var ease = Math.min(1, dt * 3);
+    cur.x += (tgt.x - cur.x) * ease; cur.y += (tgt.y - cur.y) * ease; cur.s += (tgt.s - cur.s) * ease;
+    rig.position.set(cur.x, cur.y + Math.sin(t * 1.2) * 0.08 * reduce, 0);
+    rig.scale.setScalar(Math.max(0.01, cur.s));
+    wob *= Math.pow(0.03, dt); glow *= Math.pow(0.08, dt); boost *= Math.pow(0.2, dt); spinV *= Math.pow(0.12, dt);
+    scroll.rotation.y = Math.sin(t * 0.5) * 0.3 * reduce - 0.25;
+    scroll.rotation.z = Math.sin(t * 14) * 0.09 * wob * reduce;
+    magA += (magAT - magA) * Math.min(1, dt * 2.5); spin += spinV * dt;
+    mag.position.set(Math.cos(magA) * 1.45, Math.sin(magA) * 1.1, 0.6 + Math.sin(t) * 0.05 * reduce);
+    mag.rotation.z = Math.sin(t * 0.9) * 0.2 * reduce + spin;
+    mGold.emissiveIntensity = 0.08 + glow * 0.7;
+    for (var i = 0; i < lines.length; i++) {
+      lineP[i] += ((i < correct ? 1 : 0) - lineP[i]) * Math.min(1, dt * 4);
+      lines[i].scale.x = Math.max(0.001, lines[i].userData.w * lineP[i]);
+    }
+    var a = pg.attributes.position.array, sp = 1 + boost * 6;
+    for (var j = 0; j < N; j++) {
+      a[j * 3 + 1] += vel[j] * sp * dt * reduce;
+      if (a[j * 3 + 1] > 5) a[j * 3 + 1] = -5;
+    }
+    pg.attributes.position.needsUpdate = true;
+    pm.size = 0.08 + boost * 0.05;
+    camA += (camAT - camA) * Math.min(1, dt * 2);
+    cam.position.x += (Math.sin(camA) * 1.2 + px * 0.8 * reduce - cam.position.x) * Math.min(1, dt * 3);
+    cam.position.y += (0.6 - py * 0.4 * reduce - cam.position.y) * Math.min(1, dt * 3);
+    cam.lookAt(0, 0, 0);
+    R.render(scene, cam);
+  }
+
+  addEventListener("resize", size);
+  addEventListener("scroll", place, { passive: true });
+  addEventListener("pointermove", function (e) { px = e.clientX / vw - 0.5; py = e.clientY / vh - 0.5; });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
+  new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  setInterval(function () { place(); applyTheme(); }, 600);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+  applyTheme(); size(); frame();
+
+  return {
+    mode: function (m) { mode = m; document.body.dataset.mode = m; place(); },
+    reset: function () { correct = 0; magAT = 0.5; camAT = 0; },
+    question: function (i) { magAT = 0.5 + i * 0.63; camAT = (i - 4.5) * 0.05; },
+    react: function (ok, count) {
+      correct = count;
+      if (ok) { spinV = 16; glow = 1; boost = 1; } else { wob = 1; boost = 0.3; }
+    },
+    finale: function (score) { correct = score / 10; boost = 3; spinV = 14; glow = 1; }
+  };
+})();
+</script>
+<script>
+(function () {
+  var TIME = 20, PTS = 10, CIRC = 175.9;
+  // The first option in each list is the correct answer; options are shuffled when a round starts.
+  var DATA = [
+    { q: "ใครคือผู้ถวายฎีกาในตอนนี้", o: ["ขุนช้าง", "ขุนแผน", "พลายงาม", "พระพันวษา"],
+      why: "ขุนช้างเป็นผู้ยื่นฎีกาทูลเกล้าฯ ถวายพระพันวษา เพื่อให้ทรงตัดสินเรื่องนางวันทอง", t: "ผู้ถวายฎีกา" },
+    { q: "คำว่า “ฎีกา” ในเรื่องนี้ หมายถึงอะไร", o: ["คำร้องทุกข์ที่ราษฎรทูลเกล้าฯ ถวายพระมหากษัตริย์", "พระราชโองการให้ประหารนักโทษ", "บทขับเสภาที่ใช้เปิดเรื่อง", "ตำแหน่งขุนนางผู้พิพากษา"],
+      why: "ฎีกาคือเอกสารที่ราษฎรยื่นถวายพระมหากษัตริย์ เมื่อเห็นว่าตนไม่ได้รับความเป็นธรรม", t: "ความหมายของฎีกา" },
+    { q: "“เสภา” เป็นวรรณคดีรูปแบบใด", o: ["กลอนสุภาพที่ใช้ขับเล่าเรื่อง โดยมีกรับให้จังหวะ", "ร้อยแก้วเล่านิทานชาดก", "โคลงสี่สุภาพที่ใช้สรรเสริญกษัตริย์", "บทละครที่ใช้แสดงในราชสำนัก"],
+      why: "เสภาแต่งด้วยกลอนสุภาพ ผู้ขับจะตีกรับให้จังหวะไปด้วยขณะเล่าเรื่อง", t: "ลักษณะของเสภา" },
+    { q: "พระพันวษาในเรื่อง คือใคร", o: ["พระมหากษัตริย์ผู้ทรงพิจารณาคดี", "เจ้าเมืองเชียงใหม่", "ขุนนางผู้ตรวจดูฎีกา", "พระผู้ใหญ่ที่วัดป่าเลไลยก์"],
+      why: "พระพันวษาคือพระมหากษัตริย์กรุงศรีอยุธยาในเรื่อง ผู้ทรงตัดสินเรื่องของวันทอง", t: "พระพันวษา" },
+    { q: "พลายงามเป็นบุตรของใคร", o: ["ขุนแผนกับนางวันทอง", "ขุนช้างกับนางวันทอง", "ขุนแผนกับนางสร้อยฟ้า", "ขุนช้างกับนางแก้วกิริยา"],
+      why: "พลายงามเป็นลูกชายของขุนแผนและนางวันทอง จึงเป็นห่วงแม่และต้องการปกป้องแม่", t: "พ่อแม่ของพลายงาม" },
+    { q: "พลายงามได้รับพระราชทานตำแหน่งใดในตอนนี้", o: ["จมื่นไวยวรนาถ", "ขุนแผนแสนสะท้าน", "พระยาสุโขทัย", "ขุนศรีวิชัย"],
+      why: "พลายงามได้เป็นจมื่นไวยวรนาถ จากความดีความชอบที่รับราชการสนองพระเดชพระคุณ", t: "ตำแหน่งของพลายงาม" },
+    { q: "ขุนช้างถวายฎีกาเพื่อกล่าวโทษเรื่องใด", o: ["จมื่นไวยฯ เอาตัวนางวันทองไปจากบ้านของตน", "ขุนแผนเข้าเมืองโดยไม่ได้รับอนุญาต", "นางวันทองขโมยทรัพย์สินของตระกูล", "พระพันวษาตัดสินคดีไม่เป็นธรรม"],
+      why: "ขุนช้างอ้างว่านางวันทองเป็นภรรยาของตน จึงฟ้องว่าจมื่นไวยฯ เอาตัวนางไปจากบ้าน", t: "เหตุที่ขุนช้างฟ้อง" },
+    { q: "เมื่อพระพันวษาให้นางวันทองเลือกว่าจะอยู่กับใคร นางทำอย่างไร", o: ["ลังเลและตัดสินใจเลือกไม่ได้", "เลือกอยู่กับขุนช้างทันที", "เลือกอยู่กับขุนแผนทันที", "ขอไปอยู่กับพลายงามคนเดียว"],
+      why: "วันทองลังเลไม่ตอบอย่างเด็ดขาด พระพันวษาทรงกริ้ว และถือว่านางเป็น “หญิงสองใจ”", t: "คำตอบของวันทอง" },
+    { q: "“เพชฌฆาต” คือผู้ทำหน้าที่อะไร", o: ["ประหารนักโทษ", "ยื่นฎีกาแทนราษฎร", "ขับเสภาในพิธี", "ไต่สวนพยาน"],
+      why: "เพชฌฆาตคือผู้ลงโทษประหารชีวิตนักโทษ เป็นศัพท์ที่พบในฉากตัดสินโทษของวันทอง", t: "ศัพท์ “เพชฌฆาต”" },
+    { q: "เหตุการณ์ในตอนนี้ให้ข้อคิดสำคัญอะไร", o: ["การตัดสินใจไม่เด็ดขาดอาจนำผลร้ายมาสู่ตนเอง", "ความร่ำรวยทำให้ชนะคดีเสมอ", "ผู้น้อยไม่ควรร้องขอความเป็นธรรม", "ความรักทำให้ทุกคนได้สิ่งที่ต้องการ"],
+      why: "ความลังเลของวันทองนำไปสู่จุดจบที่น่าเศร้า จึงเป็นข้อคิดเรื่องการตัดสินใจ", t: "ข้อคิดจากตอนนี้" }
+  ];
+  var GOOD = ["เก่งมาก! ได้เบาะแสชิ้นสำคัญแล้ว", "ถูกต้อง! สายตานักสืบเฉียบคมจริง ๆ", "ยอดเยี่ยม! ไปต่อกันเลย", "ใช่เลย! เบาะแสนี้ไม่รอดสายตาคุณ"];
+  var TRY = ["ไม่เป็นไร นักสืบเก่ง ๆ ก็พลาดได้ ลองดูเฉลยนี้นะ", "เกือบแล้ว! เบาะแสนี้จะช่วยให้ข้อต่อไปง่ายขึ้น", "ผิดพลาดคือการเรียนรู้ ไปดูเฉลยด้วยกัน", "ยังมีข้อต่อไปให้ตามหาอีก สู้ ๆ!"];
+  var TIMEUP = ["หมดเวลาแล้ว ไม่เป็นไร ดูเฉลยด้วยกันนะ", "เวลาหมดพอดี ข้อนี้ลองจำไว้แล้วไปต่อกัน"];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var qs, idx, score, locked, endAt, timerId, marks;
+
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function show(id) { ["home", "quiz", "end"].forEach(function (s) { $(s).hidden = s !== id; }); GL.mode(id); }
+  function flip() { var c = document.querySelector("#quiz .card"); c.classList.remove("flip"); void c.offsetWidth; c.classList.add("flip"); }
+
+  function begin() {
+    qs = DATA.map(function (d) { return { q: d.q, opts: shuffle(d.o.map(function (t, i) { return { t: t, ok: i === 0 }; })), why: d.why, t: d.t, ans: d.o[0] }; });
+    idx = 0; score = 0; marks = [];
+    $("score").textContent = "0";
+    GL.reset();
+    show("quiz");
+    ask();
+  }
+
+  function drawSeals() {
+    var h = "";
+    for (var i = 0; i < qs.length; i++) {
+      var c = i < marks.length ? (marks[i] ? "ok" : "miss") : (i === idx ? "now" : "");
+      h += '<span class="seal ' + c + '"></span>';
+    }
+    $("seals").innerHTML = h;
+  }
+
+  function ask() {
+    var d = qs[idx]; locked = false;
+    $("qno").textContent = "เบาะแสที่ " + (idx + 1) + " จาก " + qs.length;
+    $("q").textContent = d.q;
+    $("result").innerHTML = ""; $("nextrow").hidden = true;
+    var box = $("opts"); box.innerHTML = "";
+    d.opts.forEach(function (o, i) {
+      var b = document.createElement("button");
+      b.className = "opt"; b.type = "button";
+      b.innerHTML = '<span class="k">' + (i + 1) + '</span><span class="t"></span>';
+      b.lastChild.textContent = o.t;
+      b.addEventListener("click", function () { answer(i); });
+      box.appendChild(b);
+    });
+    drawSeals();
+    GL.question(idx);
+    flip();
+    startTimer();
+  }
+
+  function startTimer() {
+    clearInterval(timerId);
+    endAt = Date.now() + TIME * 1000;
+    paint(TIME * 1000);
+    timerId = setInterval(function () {
+      var left = Math.max(0, endAt - Date.now());
+      paint(left);
+      if (left === 0) { clearInterval(timerId); if (!locked) finish(-1); }
+    }, 100);
+  }
+  function paint(ms) {
+    $("sec").textContent = Math.ceil(ms / 1000);
+    $("bar").style.strokeDashoffset = String(CIRC * (1 - ms / (TIME * 1000)));
+    $("timer").classList.toggle("low", ms <= 6000);
+  }
+
+  function answer(i) { if (locked) return; clearInterval(timerId); finish(i); }
+
+  function finish(i) {
+    locked = true;
+    var d = qs[idx], ok = i >= 0 && d.opts[i].ok;
+    var btns = $("opts").children;
+    for (var k = 0; k < btns.length; k++) {
+      btns[k].disabled = true;
+      if (d.opts[k].ok) btns[k].classList.add("right");
+      else if (k === i) btns[k].classList.add("wrong");
+      else btns[k].classList.add("dim");
+    }
+    if (ok) score += PTS;
+    marks.push(ok);
+    $("score").textContent = score;
+    GL.react(ok, score / PTS);
+    drawSeals();
+    var head = ok ? pick(GOOD) : (i < 0 ? pick(TIMEUP) : pick(TRY));
+    var h = '<div class="fb ' + (ok ? "good" : "try") + '"><h2></h2>';
+    h += ok ? '<p class="pts">+' + PTS + ' คะแนน</p>' : '<p><b>เฉลย:</b> <span class="ans"></span></p>';
+    h += '<p class="why"></p></div>';
+    $("result").innerHTML = h;
+    $("result").querySelector("h2").textContent = head;
+    if (!ok) $("result").querySelector(".ans").textContent = d.ans;
+    $("result").querySelector(".why").textContent = d.why;
+    $("next").textContent = idx === qs.length - 1 ? "ดูผลสรุป" : "ข้อต่อไป";
+    $("nextrow").hidden = false;
+    $("next").focus({ preventScroll: true });
+  }
+
+  function advance() {
+    if (idx < qs.length - 1) { idx++; ask(); } else { ending(); }
+  }
+
+  function ending() {
+    clearInterval(timerId);
+    $("final").textContent = score;
+    var right = score / PTS, t, m;
+    if (right === 10) { t = "คลี่คลายคดีได้ครบทุกข้อ"; m = "คุณเข้าใจตอนขุนช้างถวายฎีกาอย่างแม่นยำ ลองเล่าให้เพื่อนฟังว่าวันทองควรตัดสินใจอย่างไรได้ไหม"; }
+    else if (right >= 7) { t = "นักสืบฝีมือดี"; m = "คุณจับประเด็นสำคัญของเรื่องได้เกือบหมด ดูข้อที่ผ่านมาอีกนิด แล้วจะแม่นยิ่งขึ้น"; }
+    else if (right >= 4) { t = "นักสืบที่กำลังไปได้สวย"; m = "คุณได้เบาะแสสำคัญหลายชิ้นแล้ว ข้อที่พลาดคือโอกาสให้กลับไปอ่านบทเสภาอีกครั้ง"; }
+    else { t = "ทุกการสืบสวนเริ่มจากจุดนี้"; m = "ขอบคุณที่ตั้งใจเล่นจนจบ ลองอ่านเฉลยด้านล่าง แล้วเล่นอีกรอบจะเห็นภาพชัดขึ้นแน่นอน"; }
+    $("endtitle").textContent = t; $("endmsg").textContent = m;
+    var rv = $("review"), h = "";
+    qs.forEach(function (d, i) { if (!marks[i]) h += '<div><b>' + (i + 1) + '. ' + d.t + '</b> · <span class="a"></span></div>'; });
+    rv.innerHTML = h ? "<h3>ข้อที่ควรทบทวน</h3>" + h : "";
+    var as = rv.querySelectorAll(".a"), n = 0;
+    qs.forEach(function (d, i) { if (!marks[i]) { as[n++].textContent = d.ans; } });
+    show("end");
+    GL.finale(score);
+  }
+
+  $("start").addEventListener("click", begin);
+  $("again").addEventListener("click", begin);
+  $("next").addEventListener("click", advance);
+  GL.mode("home");
+  document.addEventListener("keydown", function (e) {
+    if ($("quiz").hidden) return;
+    if (!locked && e.key >= "1" && e.key <= "4") { answer(Number(e.key) - 1); }
+    else if (locked && e.key === "Enter" && document.activeElement !== $("next")) { advance(); }
+  });
+})();
+</script>
+
+</body>
+</html>
